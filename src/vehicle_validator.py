@@ -1,152 +1,51 @@
-import re
-import csv
 import os
-import traceback
+import csv
+import logging
+from utils import validate_plate_format, fuzzy_match, load_csv_data
 
-def validate_plate_format(plate: str):
-    """
-    Validate Malaysian plate format:
-    - 1–3 letters
-    - optional space
-    - 1–4 digits
-    - optional trailing letter
-    """
-    pattern = r"^[A-Z]{1,3}\s?[0-9]{1,4}[A-Z]?$"
-    if not re.match(pattern, plate.upper()):
-        return False, "plate_format_error"
-    return True, None
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
-def levenshtein_distance(s1, s2):
-    """
-    Calculate the Levenshtein distance between two strings.
-    This is used for fuzzy matching without external libraries.
-    """
-    if len(s1) < len(s2):
-        return levenshtein_distance(s2, s1)
+# Try to import configuration
+try:
+    from config import CAR_DATA_PATH, LOG_LEVEL, LOG_FILE
+    # Set up logging
+    logging.basicConfig(
+        level=getattr(logging, LOG_LEVEL),
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+        handlers=[
+            logging.FileHandler(LOG_FILE),
+            logging.StreamHandler()
+        ]
+    )
+    logger.info("Loaded configuration from config.py")
+except ImportError:
+    # Use defaults if config is not available
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    project_root = os.path.dirname(current_dir)
+    CAR_DATA_PATH = os.path.join(project_root, 'data', 'car_dataset.csv')
     
-    if len(s2) == 0:
-        return len(s1)
-    
-    previous_row = range(len(s2) + 1)
-    for i, c1 in enumerate(s1):
-        current_row = [i + 1]
-        for j, c2 in enumerate(s2):
-            insertions = previous_row[j + 1] + 1
-            deletions = current_row[j] + 1
-            substitutions = previous_row[j] + (c1 != c2)
-            current_row.append(min(insertions, deletions, substitutions))
-        previous_row = current_row
-    
-    return previous_row[-1]
-
-def fuzzy_match(query: str, choices: list, threshold: int = 80):
-    """
-    Match user input to closest valid choice using Levenshtein distance.
-    Returns (best_match, score).
-    """
-    if not choices:
-        return None, 0
-    
-    best_match = None
-    best_score = 0
-    
-    # Try normal matching first
-    for choice in choices:
-        distance = levenshtein_distance(query.lower(), choice.lower())
-        max_len = max(len(query), len(choice))
-        similarity = (1 - distance / max_len) * 100 if max_len > 0 else 100
-        
-        if similarity >= threshold and similarity > best_score:
-            best_match = choice
-            best_score = similarity
-    
-    # If no good match found, try reversed string (for cases like "notorP" -> "Proton")
-    if best_match is None:
-        reversed_query = query[::-1]  # Reverse the string
-        for choice in choices:
-            distance = levenshtein_distance(reversed_query.lower(), choice.lower())
-            max_len = max(len(reversed_query), len(choice))
-            similarity = (1 - distance / max_len) * 100 if max_len > 0 else 100
-            
-            if similarity >= threshold and similarity > best_score:
-                best_match = choice
-                best_score = similarity
-    
-    return best_match, best_score
-
-def load_csv_data(file_path):
-    """
-    Load CSV data without pandas.
-    Returns a list of dictionaries.
-    """
-    data = []
-    print(f"Loading data from: {file_path}")
-    
-    # Check if file exists
-    if not os.path.exists(file_path):
-        print(f"Error: File not found: {file_path}")
-        return data
-    
-    # Check file size
-    file_size = os.path.getsize(file_path)
-    print(f"File size: {file_size} bytes")
-    
-    if file_size == 0:
-        print("Error: File is empty")
-        return data
-    
-    try:
-        with open(file_path, 'r', encoding='utf-8') as file:
-            # Print first few lines for debugging
-            print("First 5 lines of the file:")
-            for i, line in enumerate(file):
-                if i < 5:
-                    print(f"Line {i+1}: {line.strip()}")
-                else:
-                    break
-            
-            # Reset file pointer to beginning
-            file.seek(0)
-            
-            # Read CSV
-            reader = csv.DictReader(file)
-            print(f"CSV headers: {reader.fieldnames}")
-            
-            for row in reader:
-                data.append(row)
-                # Print first row for debugging
-                if len(data) == 1:
-                    print(f"First data row: {row}")
-            
-        print(f"Successfully loaded {len(data)} rows")
-        return data
-    except Exception as e:
-        print(f"Error loading CSV: {e}")
-        traceback.print_exc()
-        return data
+    logging.basicConfig(level=logging.INFO)
+    logger = logging.getLogger(__name__)
+    logger.warning("config.py not found, using default paths")
+    logger.info(f"Using car data path: {CAR_DATA_PATH}")
 
 # Load car data
-current_dir = os.path.dirname(os.path.abspath(__file__))
-data_dir = os.path.join(current_dir, '..', 'data')
-car_data_path = os.path.join(data_dir, 'car_dataset.csv')
-
-print(f"Current directory: {current_dir}")
-print(f"Data directory: {data_dir}")
-print(f"Car data path: {car_data_path}")
-
 try:
-    car_data = load_csv_data(car_data_path)
+    car_data = load_csv_data(CAR_DATA_PATH)
     # Convert year_start and year_end to integers
     for car in car_data:
         car['year_start'] = int(car['year_start'])
         car['year_end'] = int(car['year_end'])
-    print(f"Car data loaded successfully: {len(car_data)} records")
+    logger.info(f"Car data loaded successfully: {len(car_data)} records")
 except Exception as e:
-    print(f"Error loading car data: {e}")
-    traceback.print_exc()
+    logger.error(f"Error loading car data: {e}")
     car_data = []
 
 def validate_vehicle(plate: str, brand: str, model: str, year: int):
+    logger.info(f"Validating vehicle: plate={plate}, brand={brand}, model={model}, year={year}")
+    
     result = {
         "plate": plate,
         "input_brand": brand,
@@ -196,6 +95,7 @@ def validate_vehicle(plate: str, brand: str, model: str, year: int):
                 result["errors"].append("invalid_year")
             break
 
+    logger.info(f"Validation result: {result['errors'] if result['errors'] else 'No errors'}")
     return result
 
 def main():
@@ -203,8 +103,6 @@ def main():
     current_dir = os.path.dirname(os.path.abspath(__file__))
     data_dir = os.path.join(current_dir, '..', 'data')
     validation_data_path = os.path.join(data_dir, 'validation_dataset.csv')
-    
-    print(f"Validation data path: {validation_data_path}")
     
     # Load dataset
     try:
@@ -215,7 +113,6 @@ def main():
         print(f"🔍 Running validation checks on {len(validation_data)} records...\n")
     except Exception as e:
         print(f"Error loading validation data: {e}")
-        traceback.print_exc()
         return
 
     # Loop through test data
@@ -247,7 +144,6 @@ def main():
         except Exception as e:
             print(f"Error processing row {index}: {e}")
             print(f"Row data: {row}")
-            traceback.print_exc()
 
 if __name__ == "__main__":
     main()

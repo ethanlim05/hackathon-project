@@ -1,7 +1,22 @@
 import os
-import csv
+import sys
 import json
-from vehicle_validator import validate_vehicle
+import csv
+import logging
+
+# Add the parent directory to sys.path when run directly
+if __name__ == "__main__":
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    parent_dir = os.path.dirname(current_dir)
+    if parent_dir not in sys.path:
+        sys.path.insert(0, parent_dir)
+
+from core.validator import validate_vehicle
+from utils.data_loader import load_csv_data
+
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 def validate_batch(entries):
     """
@@ -72,16 +87,26 @@ def save_results_to_json(results, output_path):
     
     print(f"Results saved to {output_path}")
 
-# Example usage
-if __name__ == "__main__":
+def main():
     # Get the absolute path to the data directory
     current_dir = os.path.dirname(os.path.abspath(__file__))
-    data_dir = os.path.join(current_dir, '..', 'data')
+    data_dir = os.path.join(current_dir, '..', '..', 'data')
     validation_data_path = os.path.join(data_dir, 'validation_dataset.csv')
+    output_path = os.path.join(data_dir, 'validation_results.json')
     
     # Validate batch from CSV
     results = validate_batch_from_csv(validation_data_path)
     
     # Save results to JSON
-    output_path = os.path.join(data_dir, 'validation_results.json')
     save_results_to_json(results, output_path)
+    
+    # Print summary
+    total_entries = len(results)
+    errors_count = sum(1 for r in results if r["result"]["errors"])
+    print(f"\nBatch Validation Summary:")
+    print(f"Total entries processed: {total_entries}")
+    print(f"Entries with errors: {errors_count}")
+    print(f"Entries without errors: {total_entries - errors_count}")
+
+if __name__ == "__main__":
+    main()

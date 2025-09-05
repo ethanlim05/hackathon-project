@@ -1,7 +1,13 @@
 import unittest
 import os
 import sys
-from vehicle_validator import validate_vehicle
+
+# Add src directory to path
+current_dir = os.path.dirname(os.path.abspath(__file__))
+src_dir = os.path.join(current_dir, '..')
+sys.path.append(src_dir)
+
+from core.validator import validate_vehicle
 
 class TestVehicleValidator(unittest.TestCase):
     
@@ -38,5 +44,8 @@ class TestVehicleValidator(unittest.TestCase):
         result = validate_vehicle("INVALID", "Toyota", "Vios", 2021)
         self.assertIn("plate_format_error", result["errors"])
 
-if __name__ == "__main__":
+def main():
     unittest.main()
+
+if __name__ == "__main__":
+    main()

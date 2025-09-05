@@ -1,10 +1,11 @@
 import os
 
 # Get the absolute path to the project root
-PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+# We're in src/config, so we need to go up two levels to get to project root
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Data directory
-DATA_DIR = os.path.join(PROJECT_ROOT, '..', 'data')
+DATA_DIR = os.path.join(PROJECT_ROOT, 'data')
 
 # File paths
 CAR_DATA_PATH = os.path.join(DATA_DIR, 'car_dataset.csv')

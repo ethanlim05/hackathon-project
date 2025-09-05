@@ -1,0 +1,228 @@
+[
+  {
+    "input": {
+      "plate": "BMR 3420",
+      "brand": "Toyot",
+      "model": "Vios",
+      "year": "2021"
+    },
+    "result": {
+      "plate": "BMR 3420",
+      "input_brand": "Toyot",
+      "input_model": "Vios",
+      "input_year": 2021,
+      "suggested_brand": "Toyota",
+      "suggested_model": "Vios",
+      "valid_year_range": [
+        2010,
+        2025
+      ],
+      "errors": [
+        "typo_brand"
+      ]
+    }
+  },
+  {
+    "input": {
+      "plate": "LQJ 4070",
+      "brand": "Toyota",
+      "model": "Camry",
+      "year": "2015"
+    },
+    "result": {
+      "plate": "LQJ 4070",
+      "input_brand": "Toyota",
+      "input_model": "Camry",
+      "input_year": 2015,
+      "suggested_brand": "Toyota",
+      "suggested_model": "Camry",
+      "valid_year_range": [
+        2005,
+        2025
+      ],
+      "errors": []
+    }
+  },
+  {
+    "input": {
+      "plate": "SHX 7481",
+      "brand": "Honda",
+      "model": "Civicy",
+      "year": "2001"
+    },
+    "result": {
+      "plate": "SHX 7481",
+      "input_brand": "Honda",
+      "input_model": "Civicy",
+      "input_year": 2001,
+      "suggested_brand": "Honda",
+      "suggested_model": "Civic",
+      "valid_year_range": [
+        2000,
+        2025
+      ],
+      "errors": [
+        "typo_model"
+      ]
+    }
+  },
+  {
+    "input": {
+      "plate": "KJB 4513",
+      "brand": "Toyot",
+      "model": "Camr",
+      "year": "2025"
+    },
+    "result": {
+      "plate": "KJB 4513",
+      "input_brand": "Toyot",
+      "input_model": "Camr",
+      "input_year": 2025,
+      "suggested_brand": "Toyota",
+      "suggested_model": "Camry",
+      "valid_year_range": [
+        2005,
+        2025
+      ],
+      "errors": [
+        "typo_brand",
+        "typo_model"
+      ]
+    }
+  },
+  {
+    "input": {
+      "plate": "XUP 4254",
+      "brand": "notorP",
+      "model": "X70",
+      "year": "2099"
+    },
+    "result": {
+      "plate": "XUP 4254",
+      "input_brand": "notorP",
+      "input_model": "X70",
+      "input_year": 2099,
+      "suggested_brand": "Proton",
+      "suggested_model": "X70",
+      "valid_year_range": [
+        2019,
+        2025
+      ],
+      "errors": [
+        "typo_brand",
+        "invalid_year"
+      ]
+    }
+  },
+  {
+    "input": {
+      "plate": "RYL 5036",
+      "brand": "Honda",
+      "model": "City",
+      "year": "2016"
+    },
+    "result": {
+      "plate": "RYL 5036",
+      "input_brand": "Honda",
+      "input_model": "City",
+      "input_year": 2016,
+      "suggested_brand": "Honda",
+      "suggested_model": "City",
+      "valid_year_range": [
+        2008,
+        2025
+      ],
+      "errors": []
+    }
+  },
+  {
+    "input": {
+      "plate": "EYU 1252",
+      "brand": "Toyot",
+      "model": "Vios",
+      "year": "2011"
+    },
+    "result": {
+      "plate": "EYU 1252",
+      "input_brand": "Toyot",
+      "input_model": "Vios",
+      "input_year": 2011,
+      "suggested_brand": "Toyota",
+      "suggested_model": "Vios",
+      "valid_year_range": [
+        2010,
+        2025
+      ],
+      "errors": [
+        "typo_brand"
+      ]
+    }
+  },
+  {
+    "input": {
+      "plate": "OUG9690",
+      "brand": "Perodua",
+      "model": "Axia",
+      "year": "1800"
+    },
+    "result": {
+      "plate": "OUG9690",
+      "input_brand": "Perodua",
+      "input_model": "Axia",
+      "input_year": 1800,
+      "suggested_brand": "Perodua",
+      "suggested_model": "Axia",
+      "valid_year_range": [
+        2014,
+        2025
+      ],
+      "errors": [
+        "invalid_year"
+      ]
+    }
+  },
+  {
+    "input": {
+      "plate": "BCN 8003",
+      "brand": "Honda",
+      "model": "Civic",
+      "year": "2022"
+    },
+    "result": {
+      "plate": "BCN 8003",
+      "input_brand": "Honda",
+      "input_model": "Civic",
+      "input_year": 2022,
+      "suggested_brand": "Honda",
+      "suggested_model": "Civic",
+      "valid_year_range": [
+        2000,
+        2025
+      ],
+      "errors": []
+    }
+  },
+  {
+    "input": {
+      "plate": "OLI 8161",
+      "brand": "Honda",
+      "model": "City",
+      "year": "1970"
+    },
+    "result": {
+      "plate": "OLI 8161",
+      "input_brand": "Honda",
+      "input_model": "City",
+      "input_year": 1970,
+      "suggested_brand": "Honda",
+      "suggested_model": "City",
+      "valid_year_range": [
+        2008,
+        2025
+      ],
+      "errors": [
+        "invalid_year"
+      ]
+    }
+  }
+]

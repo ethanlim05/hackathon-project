@@ -1,0 +1,11 @@
+user_input_plate,user_input_brand,user_input_model,user_input_year,expected_brand,expected_model,expected_year,error_type
+BMR 3420,Toyota,Vios,2021,Toyota,Vios,2021,"typo_model, invalid_year"
+LQJ 4070,Toyota,Camry,2015,Toyota,Camry,2015,"typo_brand, typo_model, invalid_year"
+SHX 7481,Honda,Civic,2001,Honda,Civic,2001,"typo_brand, invalid_year"
+KJB 4513,Toyota,Camry,2025,Toyota,Camry,2025,invalid_year
+XUP 4254,Proton,X70,2022,Proton,X70,2024,typo_model
+RYL 5036,Honda,City,2016,Honda,City,2016,"typo_brand, typo_model, invalid_year"
+EYU 1252,Toyota,Vios,2011,Toyota,Vios,2011,"typo_model, invalid_year"
+OUG9690,Perodua,Axia,2019,Perodua,Axia,2015,"typo_brand, typo_model"
+BCN 8003,Honda,Civic,2022,Honda,Civic,2022,"typo_brand, typo_model, invalid_year"
+OLI 8161,Honda,City,2016,Honda,City,2023,"typo_brand, typo_model"

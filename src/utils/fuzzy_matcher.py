@@ -1,15 +1,22 @@
-import re
 import os
-import csv
+import sys
+
+# Add the parent directory to sys.path when run directly
+if __name__ == "__main__":
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    parent_dir = os.path.dirname(current_dir)
+    if parent_dir not in sys.path:
+        sys.path.insert(0, parent_dir)
+
+import re
 from functools import lru_cache
 import logging
 
-# Set up logging
 logger = logging.getLogger(__name__)
 
 # Try to import configuration, use defaults if not available
 try:
-    from config import FUZZY_MATCH_THRESHOLD
+    from config.settings import FUZZY_MATCH_THRESHOLD
     logger.info("Loaded configuration from config.py")
 except ImportError:
     logger.warning("config.py not found, using default thresholds")
@@ -90,43 +97,7 @@ def fuzzy_match(query: str, choices: list, threshold: int = None) -> tuple:
     
     return best_match, best_score
 
-def validate_plate_format(plate: str):
-    """
-    Validate Malaysian plate format:
-    - 1–3 letters
-    - optional space
-    - 1–4 digits
-    - optional trailing letter
-    """
-    pattern = r"^[A-Z]{1,3}\s?[0-9]{1,4}[A-Z]?$"
-    if not re.match(pattern, plate.upper()):
-        return False, "plate_format_error"
-    return True, None
-
-def load_csv_data(file_path):
-    """
-    Load CSV data without pandas.
-    Returns a list of dictionaries.
-    """
-    data = []
-    
-    # Convert to absolute path if it's a relative path
-    if not os.path.isabs(file_path):
-        file_path = os.path.abspath(file_path)
-    
-    logger.info(f"Loading data from: {file_path}")
-    
-    if not os.path.exists(file_path):
-        logger.error(f"File not found: {file_path}")
-        return data
-    
-    try:
-        with open(file_path, 'r', encoding='utf-8') as file:
-            reader = csv.DictReader(file)
-            for row in reader:
-                data.append(row)
-        logger.info(f"Successfully loaded {len(data)} rows from {file_path}")
-    except Exception as e:
-        logger.error(f"Error loading CSV: {e}")
-    
-    return data
+if __name__ == "__main__":
+    # Test the function
+    print("Testing fuzzy_match function:")
+    print(fuzzy_match("Toyota", ["Toyota", "Honda", "Proton"]))

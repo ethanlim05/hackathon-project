@@ -41,6 +41,9 @@ We built a smart backend system that detects and corrects typos or inaccurate ve
 
 ## Project Structure
 
+## Project Structure
+
+```text
 hackathon-project/
 ├── data/
 │   ├── car_dataset.csv              # Reference vehicle data
@@ -74,6 +77,7 @@ hackathon-project/
 │   ├── main.py                     # Main entry point
 │   └── test_autocorrect.py         # Autocorrect demonstration
 └── validation.log                  # Log file
+```
 
 ## Setup Instructions
 

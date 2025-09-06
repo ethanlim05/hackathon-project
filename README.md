@@ -82,25 +82,26 @@ project-root/
 │   │   ├── car_dataset.csv         # Reference vehicle data
 │   │   ├── validation_dataset.csv  # Dataset for validation
 │   │   └── validation_dataset_corrected.csv # Corrected dataset
+├── customer_tool/                 # Customer-facing validation tool
 │   ├── src/
-│   │   ├── core/
-│   │   │   ├── validator.py        # Main validation logic
-│   │   │   └── plate_validator.py  # Plate number validation
-│   │   ├── utils/
-│   │   │   ├── fuzzy_matcher.py    # Fuzzy matching logic
-│   │   │   └── data_loader.py     # Data loading utilities
 │   │   ├── config/
-│   │   │   └── settings.py        # Configuration settings
+│   │   │   └── settings.py
+│   │   ├── core/
+│   │   │   ├── plate_validator.py
+│   │   │   └── validator.py
 │   │   ├── processing/
-│   │   │   ├── batch_processor.py # Batch processing logic
-│   │   │   ├── data_corrector.py  # Data correction logic
-│   │   │   └── dataset_updater.py # Dataset update logic
+│   │   │   ├── batch_processor.py
+│   │   │   ├── data_corrector.py
+│   │   │   └── dataset_updater.py
 │   │   ├── tests/
-│   │   │   └── test_validator.py  # Unit tests
+│   │   │   └── test_validator.py
+│   │   ├── utils/
+│   │   │   ├── data_loader.py
+│   │   │   └── fuzzy_matcher.py
 │   │   ├── workflows/
-│   │   │   └── full_workflow.py   # Complete workflow
-│   │   └── main.py               # Main entry point
-│   └── validation.log            # Log file
+│   │   │   └── full_workflow.py
+│   │   └── main.py
+│   └── validation.log
 │
 └── employee_tool/                 # Employee-facing tool
     ├── data/

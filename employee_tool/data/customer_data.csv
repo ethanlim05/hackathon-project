@@ -1,0 +1,4 @@
+customer_id,name,email,phone,address,vehicle_plate,vehicle_brand,vehicle_model,vehicle_year,created_at,updated_at
+CUST001,John Doe,john@example.com,1234567890,123 Main St,ABC 1234,Toyota,Vios,2021,2025-09-06T19:16:36.341126,
+CUST002,Jane Smith,jane@example.com,0987654321,456 Oak Ave,XYZ 5678,Honda,Civic,2020,2025-09-06T19:16:36.341133,
+CUST003,Robert Johnson,robert@example.com,5551234567,789 Pine Rd,DEF 9012,Proton,X70,2022,2025-09-06T19:16:36.341136,

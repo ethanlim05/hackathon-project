@@ -1,0 +1,40 @@
+2025-09-06 19:06:36,096 - __main__ - INFO - Logging initialized
+2025-09-06 19:06:36,097 - __main__ - INFO - Starting employee tool...
+2025-09-06 19:06:36,097 - __main__ - INFO - Starting API server...
+2025-09-06 19:06:36,177 - core.customer_manager - INFO - Loaded 0 customer records
+2025-09-06 19:06:36,178 - core.grant_validator - WARNING - Car data file not found: C:\Users\ethan\OneDrive\Desktop\Hackathon\hackathon-project\employee_tool\..\hackathon-project\data\car_dataset.csv
+2025-09-06 19:06:36,178 - core.grant_validator - INFO - Loaded 0 vehicle grant records
+2025-09-06 19:06:36,193 - __main__ - INFO - API server running on http://localhost:8000
+2025-09-06 19:08:33,299 - __main__ - INFO - Logging initialized
+2025-09-06 19:08:33,299 - __main__ - INFO - Starting employee tool...
+2025-09-06 19:08:33,299 - __main__ - INFO - Starting API server...
+2025-09-06 19:08:33,324 - core.customer_manager - INFO - Loaded 0 customer records
+2025-09-06 19:08:33,325 - core.grant_validator - WARNING - Car data file not found: c:\Users\ethan\OneDrive\Desktop\Hackathon\hackathon-project\employee_tool\..\hackathon-project\data\car_dataset.csv
+2025-09-06 19:08:33,325 - core.grant_validator - INFO - Loaded 0 vehicle grant records
+2025-09-06 19:08:33,332 - __main__ - INFO - API server running on http://localhost:8000
+2025-09-06 19:16:36,340 - __main__ - INFO - Logging initialized
+2025-09-06 19:16:36,340 - __main__ - INFO - Starting employee tool...
+2025-09-06 19:16:36,341 - __main__ - INFO - Starting API server...
+2025-09-06 19:16:36,368 - core.customer_manager - INFO - Loaded 3 customer records
+2025-09-06 19:16:36,369 - core.grant_validator - INFO - Loaded 8 car records
+2025-09-06 19:16:36,369 - core.grant_validator - INFO - Loaded 3 vehicle grant records
+2025-09-06 19:16:36,376 - __main__ - INFO - API server running on http://localhost:8000
+2025-09-06 19:17:23,697 - __main__ - INFO - Logging initialized
+2025-09-06 19:17:23,698 - __main__ - INFO - Starting employee tool...
+2025-09-06 19:17:23,698 - __main__ - INFO - Starting API server...
+2025-09-06 19:17:23,723 - core.customer_manager - INFO - Loaded 3 customer records
+2025-09-06 19:17:23,723 - core.grant_validator - INFO - Loaded 8 car records
+2025-09-06 19:17:23,723 - core.grant_validator - INFO - Loaded 3 vehicle grant records
+2025-09-06 19:17:23,730 - __main__ - INFO - API server running on http://localhost:8000
+2025-09-06 19:52:43,149 - __main__ - INFO - Logging initialized
+2025-09-06 19:52:43,150 - __main__ - INFO - Initializing data files...
+2025-09-06 19:52:43,150 - __main__ - INFO - Data files initialized successfully
+2025-09-06 19:52:56,605 - __main__ - INFO - Logging initialized
+2025-09-06 19:52:56,606 - __main__ - INFO - Starting employee tool...
+2025-09-06 19:53:10,837 - core.grant_validator - INFO - Loaded 8 car records
+2025-09-06 19:53:10,839 - core.grant_validator - INFO - Loaded 3 vehicle grant records
+2025-09-06 19:53:52,084 - __main__ - INFO - Logging initialized
+2025-09-06 19:53:52,084 - __main__ - INFO - Starting employee tool...
+2025-09-06 19:53:59,264 - utils.fuzzy_matcher - INFO - Loaded configuration from config.py
+2025-09-06 19:54:12,697 - __main__ - INFO - Logging initialized
+2025-09-06 19:54:12,697 - __main__ - INFO - Starting employee tool...

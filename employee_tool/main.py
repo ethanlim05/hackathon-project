@@ -16,16 +16,78 @@ src_dir = os.path.join(current_dir, 'src')
 if src_dir not in sys.path:
     sys.path.insert(0, src_dir)
 
+# Define default values in case imports fail
+DEFAULT_SETTINGS = {
+    'LOG_LEVEL': 'INFO',
+    'LOG_FILE': os.path.join(current_dir, 'employee_tool.log'),
+    'DATA_DIR': os.path.join(current_dir, 'data'),
+    'EMPLOYEE_CREDENTIALS_PATH': os.path.join(current_dir, 'data', 'employee_credentials.csv'),
+    'CUSTOMER_DATA_PATH': os.path.join(current_dir, 'data', 'customer_data.csv'),
+    'VEHICLE_GRANTS_PATH': os.path.join(current_dir, 'data', 'vehicle_grants.csv'),
+    'CAR_DATA_PATH': os.path.join(current_dir, 'data', 'car_dataset.csv')
+}
+
+# Import settings with error handling
+try:
+    # Import the settings module
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("settings", os.path.join(src_dir, "config", "settings.py"))
+    settings_module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(settings_module)
+    
+    # Extract settings
+    LOG_LEVEL = getattr(settings_module, 'LOG_LEVEL', DEFAULT_SETTINGS['LOG_LEVEL'])
+    LOG_FILE = getattr(settings_module, 'LOG_FILE', DEFAULT_SETTINGS['LOG_FILE'])
+    DATA_DIR = getattr(settings_module, 'DATA_DIR', DEFAULT_SETTINGS['DATA_DIR'])
+    EMPLOYEE_CREDENTIALS_PATH = getattr(settings_module, 'EMPLOYEE_CREDENTIALS_PATH', DEFAULT_SETTINGS['EMPLOYEE_CREDENTIALS_PATH'])
+    CUSTOMER_DATA_PATH = getattr(settings_module, 'CUSTOMER_DATA_PATH', DEFAULT_SETTINGS['CUSTOMER_DATA_PATH'])
+    VEHICLE_GRANTS_PATH = getattr(settings_module, 'VEHICLE_GRANTS_PATH', DEFAULT_SETTINGS['VEHICLE_GRANTS_PATH'])
+    CAR_DATA_PATH = getattr(settings_module, 'CAR_DATA_PATH', DEFAULT_SETTINGS['CAR_DATA_PATH'])
+    
+except Exception as e:
+    print(f"Warning: Could not import settings: {e}")
+    # Use default values
+    LOG_LEVEL = DEFAULT_SETTINGS['LOG_LEVEL']
+    LOG_FILE = DEFAULT_SETTINGS['LOG_FILE']
+    DATA_DIR = DEFAULT_SETTINGS['DATA_DIR']
+    EMPLOYEE_CREDENTIALS_PATH = DEFAULT_SETTINGS['EMPLOYEE_CREDENTIALS_PATH']
+    CUSTOMER_DATA_PATH = DEFAULT_SETTINGS['CUSTOMER_DATA_PATH']
+    VEHICLE_GRANTS_PATH = DEFAULT_SETTINGS['VEHICLE_GRANTS_PATH']
+    CAR_DATA_PATH = DEFAULT_SETTINGS['CAR_DATA_PATH']
+
+# Import modules with error handling
+def safe_import(module_name, module_path):
+    """Safely import a module from a file path."""
+    try:
+        import importlib.util
+        spec = importlib.util.spec_from_file_location(module_name, module_path)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        return module
+    except Exception as e:
+        print(f"Warning: Could not import {module_name}: {e}")
+        return None
+
+# Import auth module
+auth_module = safe_import("auth", os.path.join(src_dir, "core", "auth.py"))
+add_employee = getattr(auth_module, 'add_employee', None) if auth_module else None
+
+# Import grant_validator module
+grant_validator_module = safe_import("grant_validator", os.path.join(src_dir, "core", "grant_validator.py"))
+GrantValidator = getattr(grant_validator_module, 'GrantValidator', None) if grant_validator_module else None
+
+# Import customer_manager module
+customer_manager_module = safe_import("customer_manager", os.path.join(src_dir, "core", "customer_manager.py"))
+CustomerManager = getattr(customer_manager_module, 'CustomerManager', None) if customer_manager_module else None
+
 def setup_logging():
     """Set up logging for the application."""
-    from config.settings import LOG_LEVEL, LOG_FILE
-    
     # Create logs directory if it doesn't exist
     os.makedirs(os.path.dirname(LOG_FILE), exist_ok=True)
     
     # Configure logging
     logging.basicConfig(
-        level=getattr(logging, LOG_LEVEL),
+        level=getattr(logging, LOG_LEVEL, logging.INFO),
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
         handlers=[
             logging.FileHandler(LOG_FILE),
@@ -39,20 +101,11 @@ def setup_logging():
 
 def init_data_files():
     """Initialize data files if they don't exist."""
-    from config.settings import (
-        EMPLOYEE_CREDENTIALS_PATH,
-        CUSTOMER_DATA_PATH,
-        VEHICLE_GRANTS_PATH,
-        CAR_DATA_PATH
-    )
-    
     # Create data directory if it doesn't exist
-    data_dir = os.path.dirname(EMPLOYEE_CREDENTIALS_PATH)
-    os.makedirs(data_dir, exist_ok=True)
+    os.makedirs(DATA_DIR, exist_ok=True)
     
     # Initialize employee credentials file
-    if not os.path.exists(EMPLOYEE_CREDENTIALS_PATH):
-        from core.auth import add_employee
+    if not os.path.exists(EMPLOYEE_CREDENTIALS_PATH) and add_employee:
         add_employee('admin', 'Administrator', 'admin123', 'admin')
         add_employee('validator1', 'Validator One', 'validator123', 'validator')
         add_employee('validator2', 'Validator Two', 'validator123', 'validator')
@@ -112,7 +165,7 @@ def init_data_files():
             ])
     
     # Create car_models_list.csv if it doesn't exist
-    car_models_path = os.path.join(data_dir, 'car_models_list.csv')
+    car_models_path = os.path.join(DATA_DIR, 'car_models_list.csv')
     if not os.path.exists(car_models_path):
         with open(car_models_path, 'w', encoding='utf-8', newline='') as file:
             writer = csv.writer(file)
@@ -134,7 +187,6 @@ def init_data_files():
 
 def display_car_models():
     """Display the list of available car models."""
-    from config.settings import DATA_DIR
     car_models_path = os.path.join(DATA_DIR, 'car_models_list.csv')
     
     print("\n=== Available Car Models ===")
@@ -148,7 +200,9 @@ def display_car_models():
 
 def validate_vehicle_grant():
     """Validate a vehicle grant interactively."""
-    from core.grant_validator import GrantValidator
+    if not GrantValidator:
+        print("Error: Grant validator not available.")
+        return
     
     validator = GrantValidator()
     
@@ -209,7 +263,9 @@ def validate_vehicle_grant():
 
 def search_vehicle_grants():
     """Search for vehicle grants interactively."""
-    from core.grant_validator import GrantValidator
+    if not GrantValidator:
+        print("Error: Grant validator not available.")
+        return
     
     validator = GrantValidator()
     
@@ -246,8 +302,9 @@ def search_vehicle_grants():
 
 def generate_report():
     """Generate a simple report interactively."""
-    from core.grant_validator import GrantValidator
-    from core.customer_manager import CustomerManager
+    if not GrantValidator or not CustomerManager:
+        print("Error: Required modules not available.")
+        return
     
     grant_validator = GrantValidator()
     customer_manager = CustomerManager()

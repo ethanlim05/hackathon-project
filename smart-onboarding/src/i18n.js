@@ -155,11 +155,6 @@ export const dictionaries = {
       app_title: "Smart Insurance Onboarding",
       app_sub: "Single-page flow with expandable sections and smart validation hooks.",
       plate_title: "1 · Car Plate Verification",
-<<<<<<< Updated upstream
-=======
-      plate_label: "Vehicle Registration Number",
-      plate_help: "We'll check for existing policies and prefill your data if found.",
->>>>>>> Stashed changes
       personal_title: "2 · Personal Information",
       car_title: "3 · Car Information",
       funding_title: "4 · Funding & Confirmation",
@@ -189,11 +184,6 @@ export const dictionaries = {
       app_title: "Onboarding Insurans Pintar",
       app_sub: "Aliran satu halaman dengan bahagian boleh kembang dan pengesahan pintar.",
       plate_title: "1 · Pengesahan Nombor Plat",
-<<<<<<< Updated upstream
-=======
-      plate_label: "Nombor Pendaftaran Kenderaan",
-      plate_help: "Kami semak polisi sedia ada dan isi awal data jika ada.",
->>>>>>> Stashed changes
       personal_title: "2 · Maklumat Peribadi",
       car_title: "3 · Maklumat Kenderaan",
       funding_title: "4 · Pembiayaan & Pengesahan",
@@ -223,11 +213,6 @@ export const dictionaries = {
       app_title: "智能保险入职",
       app_sub: "单页流程，具有可展开的部分和智能验证钩子。",
       plate_title: "1 · 车牌验证",
-<<<<<<< Updated upstream
-=======
-      plate_label: "车辆注册号",
-      plate_help: "我们会检查现有保单，如有则预填资料。",
->>>>>>> Stashed changes
       personal_title: "2 · 个人信息",
       car_title: "3 · 车辆信息",
       funding_title: "4 · 资金与确认",

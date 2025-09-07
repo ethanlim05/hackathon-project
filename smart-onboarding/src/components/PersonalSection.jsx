@@ -11,7 +11,11 @@ function deriveFromNRIC(nric){
   return { gender, dobISO };
 }
 
+<<<<<<< Updated upstream
 export default function PersonalSection({ t, personal, setPersonal }) {
+=======
+export default function PersonalSection({ t, personal, setPersonal, submitted=false }) {
+>>>>>>> Stashed changes
   const idType = personal.idType || "NRIC"; // 'NRIC' | 'Passport' | 'BRN'
   const idValue = personal.idValue || "";
 
@@ -35,17 +39,41 @@ export default function PersonalSection({ t, personal, setPersonal }) {
         <div className="field">
           <label>{idType === "NRIC" ? "NRIC" : idType === "Passport" ? "Passport No." : "Business Reg No. (SSM)"}</label>
           <input
+<<<<<<< Updated upstream
+=======
+            className={idType === "NRIC" && ((personal.idValue && deriveFromNRIC(personal.idValue).dobISO==="") || (submitted && deriveFromNRIC(personal.idValue).dobISO==="")) ? "error" : ""}
+>>>>>>> Stashed changes
             value={idValue}
             onChange={(e)=>setField('idValue', e.target.value)}
             placeholder={idType === "NRIC" ? "12 digits" : idType === "Passport" ? "e.g., A1234567" : "e.g., 201901234567"}
           />
           {idType === "NRIC" && (
+<<<<<<< Updated upstream
             <div className="small">Gender: {derived.gender}{derived.dobISO ? ` • DOB: ${derived.dobISO}` : ""}</div>
+=======
+            <>
+              <div className="small">Gender: {derived.gender}{derived.dobISO ? ` • DOB: ${derived.dobISO}` : ""}</div>
+              {((personal.idValue && deriveFromNRIC(personal.idValue).dobISO==="") || (submitted && deriveFromNRIC(personal.idValue).dobISO==="")) && (
+                <div className="error-text">NRIC must be 12 digits; first 6 as YYMMDD with a valid date.</div>
+              )}
+            </>
+>>>>>>> Stashed changes
           )}
         </div>
         <div className="field">
           <label>Mobile Number</label>
+<<<<<<< Updated upstream
           <input value={personal.phone || ""} onChange={(e)=>setField('phone', e.target.value)} placeholder="e.g., 01X-XXXXXXX" />
+=======
+          <input
+            className={((personal.phone || "").replace(/\D/g,"").length>0 && !/^\d{9,12}$/.test((personal.phone||"").replace(/\D/g,""))) || (submitted && !/^\d{9,12}$/.test((personal.phone||"").replace(/\D/g,""))) ? "error" : ""}
+            value={personal.phone || ""}
+            onChange={(e)=>setField('phone', e.target.value)}
+            placeholder="e.g., 01X-XXXXXXX" />
+          {((((personal.phone || "").replace(/\D/g,"").length>0) && !/^\d{9,12}$/.test((personal.phone||"").replace(/\D/g,""))) || (submitted && !/^\d{9,12}$/.test((personal.phone||"").replace(/\D/g,"")))) && (
+            <div className="error-text">Enter 9–12 digits (numbers only).</div>
+          )}
+>>>>>>> Stashed changes
         </div>
       </div>
 
@@ -56,7 +84,18 @@ export default function PersonalSection({ t, personal, setPersonal }) {
         </div>
         <div className="field">
           <label>Email</label>
+<<<<<<< Updated upstream
           <input value={personal.email || ""} onChange={(e)=>setField('email', e.target.value)} placeholder="you@email.com" />
+=======
+          <input
+            className={((personal.email||"").length>0 && !/.+@.+\..+/.test(personal.email||"")) || (submitted && !/.+@.+\..+/.test(personal.email||"")) ? "error" : ""}
+            value={personal.email || ""}
+            onChange={(e)=>setField('email', e.target.value)}
+            placeholder="you@email.com" />
+          {((((personal.email||"").length>0) && !/.+@.+\..+/.test(personal.email||"")) || (submitted && !/.+@.+\..+/.test(personal.email||""))) && (
+            <div className="error-text">Enter a valid email with @ and domain.</div>
+          )}
+>>>>>>> Stashed changes
         </div>
       </div>
 
@@ -68,7 +107,17 @@ export default function PersonalSection({ t, personal, setPersonal }) {
       <div className="row-3" style={{ marginTop: 10 }}>
         <div className="field">
           <label>Postcode</label>
+<<<<<<< Updated upstream
           <input value={personal.postcode || ""} onChange={(e)=>setField('postcode', e.target.value)} />
+=======
+          <input
+            className={((personal.postcode||"").length>0 && !/^\d{5}$/.test(personal.postcode||"")) || (submitted && !/^\d{5}$/.test(personal.postcode||"")) ? "error" : ""}
+            value={personal.postcode || ""}
+            onChange={(e)=>setField('postcode', e.target.value)} />
+          {((((personal.postcode||"").length>0) && !/^\d{5}$/.test(personal.postcode||"")) || (submitted && !/^\d{5}$/.test(personal.postcode||""))) && (
+            <div className="error-text">Postcode must be exactly 5 digits.</div>
+          )}
+>>>>>>> Stashed changes
         </div>
         <div className="field">
           <label>City</label>

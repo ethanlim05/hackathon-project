@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
+<<<<<<< Updated upstream
 import { verifyPlate } from '../api';
+=======
+import { verifyPlate, confirmOwnership } from '../api';
+>>>>>>> Stashed changes
 import Modal from './Modal';
 
 export default function PlateSection({ t, plate, setPlate, onVerified, setPrefill, onHelperSelectId }) {

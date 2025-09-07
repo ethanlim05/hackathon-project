@@ -6,6 +6,10 @@ import PlateSection from './components/PlateSection';
 import PersonalSection from './components/PersonalSection';
 import CarSection from './components/CarSection';
 import FundingSection from './components/FundingSection';
+<<<<<<< Updated upstream
+=======
+import Modal from './components/Modal';
+>>>>>>> Stashed changes
 import Benefits from './components/Benefits';
 import Footer from './components/Footer';
 import Header from './components/Header';
@@ -40,6 +44,13 @@ export default function App(){
   const [car, setCar] = useState({ brand: '', model: '', year: '' });
   const [submitting, setSubmitting] = useState(false);
   const [submitRes, setSubmitRes] = useState(null);
+<<<<<<< Updated upstream
+=======
+  const [confirmPersonalOpen, setConfirmPersonalOpen] = useState(false);
+  const [confirmCarOpen, setConfirmCarOpen] = useState(false);
+  const [personalSubmitAttempt, setPersonalSubmitAttempt] = useState(false);
+  const [carSubmitAttempt, setCarSubmitAttempt] = useState(false);
+>>>>>>> Stashed changes
 
   const derived = useMemo(()=>derive(personal.nric), [personal.nric]);
   const stepsOrder = ['plate','personal','car','funding'];
@@ -64,6 +75,73 @@ export default function App(){
   function setPrefill(profile){ setPersonal(p=>({ ...p, ...profile })); setCar(c=>({ ...c, ...profile })); }
   function onCarValid(){ setOpenId('funding'); }
 
+<<<<<<< Updated upstream
+=======
+  // -------------------- Validation helpers --------------------
+  function isValidEmail(v){ return /.+@.+\..+/.test(String(v||"")); }
+  function isValidPostcode(v){ return /^\d{5}$/.test(String(v||"")); }
+  function isValidMobile(v){ return /^\d{9,12}$/.test(String(v||"").replace(/\D/g, "")); }
+  function isValidNRIC(v){
+    const d = String(v||"").replace(/\D/g, "");
+    if (d.length !== 12) return false;
+    const yy = d.slice(0,2), mm = d.slice(2,4), dd = d.slice(4,6);
+    const m = Number(mm), day = Number(dd);
+    if (m < 1 || m > 12) return false;
+    const maxDay = new Date(Number(`20${yy}`), m, 0).getDate();
+    return day >= 1 && day <= maxDay;
+  }
+
+  function validatePersonal(){
+    const idOk = personal.idType === 'NRIC' ? isValidNRIC(personal.idValue) : (personal.idValue && personal.idValue.length >= 3);
+    return (
+      (personal.fullName||'').trim().length > 1 &&
+      idOk &&
+      isValidEmail(personal.email) &&
+      isValidMobile(personal.phone) &&
+      (personal.addressLine1||'').trim().length > 3 &&
+      isValidPostcode(personal.postcode) &&
+      (personal.city||'').trim().length > 1 &&
+      (personal.state||'').trim().length > 1
+    );
+  }
+
+  function validateCar(){
+    const y = Number(car.year);
+    const current = new Date().getFullYear()+1;
+    const yearOk = /^\d{4}$/.test(String(car.year||'')) && y >= 1990 && y <= current;
+    return (
+      (car.brand||'').trim().length > 1 &&
+      (car.model||'').trim().length > 1 &&
+      yearOk
+    );
+  }
+
+  function onPersonalSave(){
+    setPersonalSubmitAttempt(true);
+    if (validatePersonal()) {
+      setConfirmPersonalOpen(true);
+    } else {
+      // keep user on section and rely on red hints already wired in PersonalSection via submitted flag
+      requestAnimationFrame(()=>{
+        const firstError = document.querySelector('.personal input.error');
+        if (firstError) firstError.scrollIntoView({ behavior:'smooth', block:'center' });
+      });
+    }
+  }
+
+  function onCarSave(){
+    setCarSubmitAttempt(true);
+    if (validateCar()) {
+      setConfirmCarOpen(true);
+    } else {
+      requestAnimationFrame(()=>{
+        const carEl = document.querySelector('.car input.error');
+        if (carEl) carEl.scrollIntoView({ behavior:'smooth', block:'center' });
+      });
+    }
+  }
+
+>>>>>>> Stashed changes
   async function onSubmit(){
     setSubmitting(true); setSubmitRes(null);
     try{
@@ -101,6 +179,7 @@ export default function App(){
             </AccordionItem>
 
             <AccordionItem id="personal" openId={openId} setOpenId={setOpenId} title={t("personal_title")}>
+<<<<<<< Updated upstream
               <PersonalSection
                 t={t}
                 personal={personal}
@@ -109,10 +188,17 @@ export default function App(){
               <div className="actions">
                 <button className="btn ghost" onClick={() => setOpenId('plate')}>{t("back")}</button>
                 <button className="btn primary" onClick={() => setOpenId('car')}>{t("save_continue")}</button>
+=======
+              <PersonalSection t={t} personal={personal} setPersonal={setPersonal} submitted={personalSubmitAttempt} />
+              <div className="right-actions" style={{ marginTop: 18 }}>
+                <button className="btn ghost" onClick={()=>setOpenId('plate')}>{t("back")}</button>
+                <button className="btn primary" onClick={onPersonalSave}>{t("save_continue")}</button>
+>>>>>>> Stashed changes
               </div>
             </AccordionItem>
 
           <AccordionItem id="car" openId={openId} setOpenId={setOpenId} title={t("car_title")}>
+<<<<<<< Updated upstream
             <CarSection
               t={t}
               car={car}
@@ -121,6 +207,12 @@ export default function App(){
             />
             <div className="actions">
               <button className="btn ghost" onClick={() => setOpenId('personal')}>{t("back")}</button>
+=======
+            <CarSection t={t} car={car} setCar={setCar} />
+            <div className="right-actions" style={{ marginTop: 18 }}>
+              <button className="btn ghost" onClick={()=>setOpenId('personal')}>{t("back")}</button>
+              <button className="btn primary" onClick={onCarSave}>{t("save_continue")}</button>
+>>>>>>> Stashed changes
             </div>
           </AccordionItem>
 
@@ -136,6 +228,41 @@ export default function App(){
       </main>
 
       <ChatbotWidget />
+<<<<<<< Updated upstream
+=======
+
+      {/* Confirmation Modals */}
+      <Modal
+        open={confirmPersonalOpen}
+        title="Confirm Personal Information"
+        onClose={()=>setConfirmPersonalOpen(false)}
+        secondary={<button className="btn ghost" onClick={()=>setConfirmPersonalOpen(false)}>Edit</button>}
+        primary={<button className="btn primary" onClick={()=>{ setConfirmPersonalOpen(false); setOpenId('car'); }}>Confirm & Continue</button>}
+      >
+        <div className="confirm-grid">
+          <div className="kv"><label>Name</label><span>{personal.fullName}</span></div>
+          <div className="kv"><label>NRIC/ID</label><span>{personal.idValue || personal.nric}</span></div>
+          <div className="kv"><label>Email</label><span>{personal.email}</span></div>
+          <div className="kv"><label>Mobile</label><span>{personal.phone}</span></div>
+          <div className="kv col-2"><label>Address</label><span>{personal.addressLine1}, {personal.postcode} {personal.city}, {personal.state}</span></div>
+          <div className="kv"><label>E‑Hailing</label><span>{personal.eHailing ? 'Yes' : 'No'}</span></div>
+        </div>
+      </Modal>
+
+      <Modal
+        open={confirmCarOpen}
+        title="Confirm Car Information"
+        onClose={()=>setConfirmCarOpen(false)}
+        secondary={<button className="btn ghost" onClick={()=>setConfirmCarOpen(false)}>Edit</button>}
+        primary={<button className="btn primary" onClick={()=>{ setConfirmCarOpen(false); setOpenId('funding'); }}>Confirm & Continue</button>}
+      >
+        <div className="confirm-grid">
+          <div className="kv"><label>Brand</label><span>{car.brand}</span></div>
+          <div className="kv"><label>Model</label><span>{car.model}</span></div>
+          <div className="kv"><label>Year</label><span>{car.year}</span></div>
+        </div>
+      </Modal>
+>>>>>>> Stashed changes
     </div>
   );
 }

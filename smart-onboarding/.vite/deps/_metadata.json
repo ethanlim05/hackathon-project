@@ -1,0 +1,25 @@
+{
+  "hash": "fbcc65a5",
+  "configHash": "e84996ed",
+  "lockfileHash": "849246a1",
+  "browserHash": "434d9629",
+  "optimized": {
+    "react": {
+      "src": "../../../../../Codenection 2025/Ethanbranch/smart-onboarding/node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "5d361dcf",
+      "needsInterop": true
+    },
+    "react-dom/client": {
+      "src": "../../../../../Codenection 2025/Ethanbranch/smart-onboarding/node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "aa563a6a",
+      "needsInterop": true
+    }
+  },
+  "chunks": {
+    "chunk-XL3BXY32": {
+      "file": "chunk-XL3BXY32.js"
+    }
+  }
+}

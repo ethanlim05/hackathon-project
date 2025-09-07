@@ -1,312 +1,307 @@
 # Smart Vehicle Data Validation & Error Detection
 
+> **One platform, two tools, one flow.**
+>
+> * A **customer-facing web onboarding** that validates inputs in real time and guides users through a clean, multi‑step flow.
+> * A **Python validation engine** used by both the web backend and an **employee CLI** for operations.
+
+---
+
+## Table of contents
+
+* [Overview](#overview)
+* [Why it matters](#why-it-matters)
+* [Architecture](#architecture)
+* [Live Demo (local)](#live-demo-local)
+* [Quick Start](#quick-start)
+
+  * [Prerequisites](#prerequisites)
+  * [1) Clone](#1-clone)
+  * [2) Frontend (Vite + React)](#2-frontend-vite--react)
+  * [3) Python Engine & Employee CLI](#3-python-engine--employee-cli)
+* [Project Layout](#project-layout)
+* [Frontend: Smart Onboarding](#frontend-smart-onboarding)
+
+  * [Features](#features)
+  * [How the plate check works](#how-the-plate-check-works)
+  * [Local configuration](#local-configuration)
+  * [i18n (EN/BM/中文)](#i18n-enbm中文)
+* [Python Validation Engine](#python-validation-engine)
+
+  * [Capabilities](#capabilities)
+  * [Run modes](#run-modes)
+* [Employee CLI](#employee-cli)
+* [Data Files](#data-files)
+* [Testing](#testing)
+* [Troubleshooting](#troubleshooting)
+* [FAQ](#faq)
+* [License](#license)
+
+---
+
 ## Overview
-This project is a comprehensive system designed to detect and correct typos or inaccurate vehicle input specifications in real-time. It consists of two complementary tools:
 
-1. Customer-Facing Tool: A backend system that validates vehicle data entered by customers during insurance applications
-2. Employee-Facing Tool: A command-line interface for employees to validate customer information, vehicle grants, and manage vehicle data
+This project ships a **real‑time vehicle data validator** and a **streamlined insurance onboarding UI** that together reduce bad inputs (plate, brand, model, year), shrink time‑to‑quote, and lower back‑office correction effort.
 
-Both tools work together to ensure smoother, faster, and more reliable insurance processing by identifying and fixing common data entry errors.
+### Components
 
+1. **Frontend (Vite + React)**
 
-## Problem Statement
-When buying or renewing car insurance online, users often mistype or enter incorrect vehicle details (e.g., plate number, car model, year of manufacture). These mistakes can delay policy approval, cause pricing errors, or even lead to invalid insurance coverage.
+   * Single‑page, expandable sections (Car Plate → Personal → Car → Funding)
+   * Real‑time hints, soft validations, and modal confirmations (e.g., last 4 NRIC)
+   * Language toggle: **EN / BM / 中文**
+2. **Python Validation Engine (customer tool)**
 
-## Solution Overview
-We built a smart system with two components:
+   * Fuzzy matching (brand/model), plate regex checks, year windows
+   * Batch processing + JSON results + auto‑correction pass
+3. **Employee CLI (operations tool)**
 
-1. Customer-Facing Tool: A backend system that:
-- Validates vehicle plate numbers, brands, models, and years of manufacture against a known dataset
-- Provides suggestions for corrections in real-time
-- Processes batch validations and generates reports
+   * Search, validate, and manage grants
+   * Zero third‑party deps; standard library only
 
-2. Employee-Facing Tool: A command-line interface that:
-- Allows employees to validate vehicle grants interactively
-- Provides a list of available car models for reference
-- Enables searching and managing vehicle grant records
-- Generates simple reports without external dependenci
+## Why it matters
 
-## Key Features
+Typos and loose validation push errors downstream: wrong quotes, delayed policies, avoidable support pings. We shift quality **left** with inline validation and guided confirmation steps.
 
-# Customer Facing Tool
-1. Vehicle Data Validation
-- Plate Number Validation: Checks if Malaysian license plate numbers follow the correct format
-- Brand Name Validation: Detects typos in vehicle brands using fuzzy matching
-- Model Name Validation: Identifies typos in vehicle models with fuzzy matching
-- Year Validation: Verifies if the manufacturing year falls within the valid range
+---
 
-2. Error Detection Capabilities
-- Detects common typos in brand names (e.g., "Toyot" instead of "Toyota")
-- Identifies model name errors (e.g., "Civicy" instead of "Civic")
-- Recognizes reversed brand names (e.g., "notorP" instead of "Proton")
-- Flags invalid manufacturing years and plate format errors
+## Architecture
 
-3. Data Correction
-- Suggests corrections for detected errors
-- Automatically applies corrections to datasets
-- Provides confidence scores for suggested corrections
-
-4. Batch Processing
-- Processes multiple vehicle entries simultaneously
-- Exports validation results to JSON format
-- Generates summary statistics of validation results
-
-# Employee-Facing Tool
-1. Interactive Command-Line Interface
-- Menu-driven system for easy navigation
-- No external dependencies required
-- Simple and intuitive for employee use
-
-2. Vehicle Grant Management
-- Validate vehicle grants with real-time feedback
-- Search existing grants by various criteria
-- Add new grants with validation
-
-3. Car Model Reference
-- Provides a list of all available car models
-- Simple format following the dataset structure
-- Easy to update and maintain
-
-4. Reporting
-- Generate simple reports on vehicle grants
-- Customer summaries by vehicle brand
-- Grant status summaries
-
-
-## Project Structure
-
-```text
-project-root/
-├── hackathon-project/              # Customer-facing tool
-│   ├── data/
-│   │   ├── car_dataset.csv         # Reference vehicle data
-│   │   ├── validation_dataset.csv  # Dataset for validation
-│   │   └── validation_dataset_corrected.csv # Corrected dataset
-├── customer_tool/                 # Customer-facing validation tool
-│   ├── src/
-│   │   ├── config/
-│   │   │   └── settings.py
-│   │   ├── core/
-│   │   │   ├── plate_validator.py
-│   │   │   └── validator.py
-│   │   ├── processing/
-│   │   │   ├── batch_processor.py
-│   │   │   ├── data_corrector.py
-│   │   │   └── dataset_updater.py
-│   │   ├── tests/
-│   │   │   └── test_validator.py
-│   │   ├── utils/
-│   │   │   ├── data_loader.py
-│   │   │   └── fuzzy_matcher.py
-│   │   ├── workflows/
-│   │   │   └── full_workflow.py
-│   │   └── main.py
-│   └── validation.log
-│
-└── employee_tool/                 # Employee-facing tool
-    ├── data/
-    │   ├── employee_credentials.csv # Employee authentication data
-    │   ├── customer_data.csv       # Customer information
-    │   ├── vehicle_grants.csv      # Vehicle grant records
-    │   ├── car_models_list.csv    # List of available car models
-    │   └── car_dataset.csv        # Copy of reference vehicle data
-    ├── src/
-    │   ├── core/
-    │   │   ├── auth.py           # Employee authentication
-    │   │   ├── customer_manager.py # Customer data management
-    │   │   └── grant_validator.py # Vehicle grant validation
-    │   ├── utils/
-    │   │   ├── data_loader.py    # Data loading utilities
-    │   │   └── fuzzy_matcher.py  # Fuzzy matching logic
-    │   ├── config/
-    │   │   └── settings.py       # Configuration settings
-    │   └── cli/
-    │       └── employee_cli.py   # Command-line interface
-    ├── tests/
-    │   └── test_employee_tool.py # Unit tests
-    ├── main.py                   # Main entry point
-    └── employee_tool.log        # Log file
+```
+Frontend (React) ──calls──> Backend API (stubbed/local for demo)
+        │                         │
+        └─────────────────────────┴──> Python Validation Engine
+                                        └─ shared logic for CLI & batch
 ```
 
-## Setup Instructions
+> In hackathon mode the frontend talks to mocked/stubbed endpoints that call directly into the Python engine or use local sample data. Swap the stubs with real API URLs later.
+
+---
+
+## Live Demo (local)
+
+* **Frontend:** [http://localhost:5173](http://localhost:5173)
+* **Employee CLI:** runs in terminal
+
+---
+
+## Quick Start
 
 ### Prerequisites
-- Python 3.7 or higher
 
-### Installation
-1. Clone the repository:
-   ```bash
-   git clone <https://github.com/ethanlim05/hackathon-project.git>
-   cd hackathon-project
+* **Git**
+* **Python ≥ 3.8**
+* **Node.js ≥ 18** and **npm**
 
-2. Create and activate a virtual environment
-   python -m venv venv
-   # On Windows:
-   venv\Scripts\activate
-   # On Unix or MacOS:
-   source venv/bin/activate
+  * Recommended: install via **nvm** (Node Version Manager)
+  * macOS/Linux
 
-### Usage
+    ```bash
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+    # reload your shell then
+    nvm install --lts
+    nvm use --lts
+    ```
+  * Windows: use **nvm-windows** or install Node.js LTS from [https://nodejs.org](https://nodejs.org)
 
-# Customer-Facing Tool
-1. Validate Mode (Runs the validator on the validation dataset and prints results.)
-   python main.py --mode validate
+---
 
-2. Batch Mode (Processes the validation dataset in batch and saves results to JSON.)
-   python main.py --mode batch
+### 1) Clone
 
-3. Correct Mode (Applies corrections to the validation dataset.)
-   python main.py --mode correct
+```bash
+git clone https://github.com/ethanlim05/hackathon-project.git
+cd hackathon-project
+```
 
-4. Workflow Mode (Runs the complete workflow (validate → correct → revalidate → compare).)
-   python main.py --mode workflow
+### 2) Frontend (Vite + React)
 
-5. Test Mode (Runs the unit tests.)
-   python main.py --mode test
+```bash
+cd smart-onboarding
+npm install
+npm run dev    # starts Vite dev server on :5173
+```
 
-# Employee-Facing Tool
-1. Initialize Data Files (only need to do this once):
-   python main.py --mode init
+You should see the **BJAK** header, stepper (Car Plate → Personal → Car → Funding), and the benefits + footer sections.
 
-2. Start the CLI Tool:
-   python main.py --mode cli
+**Common scripts**
 
-3. Use the Menu Options:
-- View Car Models: See the list of available car models
-- Validate Vehicle Grant: Enter vehicle details to validate
-- Search Vehicle Grants: Search for existing grants
-- Generate Report: Generate simple reports
-- Exit: Exit the tool
+```bash
+npm run dev       # local dev
+npm run build     # production build (dist/)
+npm run preview   # preview the prod build
+```
 
-### Data
-# Customer-Facing Tool
-1. car_dataset.csv
-Contains the canonical dataset of valid vehicles with the following columns:
+### 3) Python Engine & Employee CLI
 
-brand: Vehicle brand (e.g., Toyota, Honda)
-model: Vehicle model (e.g., Vios, Civic)
-year_start: First year the model was available
-year_end: Last year the model was available (or projected)
+Open a second terminal in the project root.
 
-2. validation_dataset.csv
-Contains test data for the validator with the following columns:
+```bash
+# Create a virtual environment
+python -m venv venv
+# macOS/Linux
+source venv/bin/activate
+# Windows
+venv\Scripts\activate
 
-user_input_plate: Input plate number
-user_input_brand: Input brand
-user_input_model: Input model
-user_input_year: Input year
-expected_brand: Expected corrected brand
-expected_model: Expected corrected model
-expected_year: Expected corrected year
-error_type: Type of error(s) in the input
+# Move to the customer tool
+cd customer_tool
+python -m pip install -r requirements.txt  # (if provided; otherwise stdlib only)
 
-# Employee-Facing Tool
-1. car_models_list.csv
-Contains a simple list of available car models with columns:
-- brand: Vehicle brand
-- model: Vehicle model
+# Try the validator
+python src/main.py --mode validate
+python src/main.py --mode workflow
 
-2. employee_credentials.csv
-Contains employee authentication data with columns:
-- employee_id: Unique employee identifier
-- name: Employee name
-- password_hash: Hashed password
-- role: Employee role (admin, validator)
-- active: Account status
-- created_at: Account creation timestamp
+# Run the Employee CLI
+cd ../../employee_tool
+python main.py --mode init   # one-time data bootstrap
+python main.py --mode cli    # interactive menu
+```
 
-3. customer_data.csv
-Contains customer information with columns:
-- customer_id: Unique customer identifier
-- name: Customer name
-- email: Customer email
-- phone: Customer phone number
-- address: Customer address
-- vehicle_plate: Vehicle plate number
-- vehicle_brand: Vehicle brand
-- vehicle_model: Vehicle model
-- vehicle_year: Vehicle year
-- created_at: Record creation timestamp
-- updated_at: Record update timestamp
+---
 
-4. vehicle_grants.csv
-Contains vehicle grant records with columns:
-- grant_id: Unique grant identifier
-- plate_number: Vehicle plate number
-- brand: Vehicle brand
-- model: Vehicle model
-- year: Vehicle year
-- owner_name: Vehicle owner name
-- owner_id: Vehicle owner ID
-- grant_date: Grant date
-- status: Grant status
-- added_by: Employee who added the grant
-- added_at: Grant creation timestamp
-- updated_by: Employee who last updated the grant
-- updated_at: Grant update timestamp
+## Project Layout
 
-### How it works
-# Core Validation Logic
-1. Plate Validation:
-Uses a regular expression to check if the plate number follows the Malaysian format (1-3 letters, optional space, 1-4 digits, optional trailing letter).
+```
+project-root/
+├─ smart-onboarding/            # React app (frontend)
+│  ├─ src/
+│  │  ├─ components/            # Stepper, Accordion, Sections, Modals, Header, Footer
+│  │  ├─ assets/                # Logo, icons
+│  │  ├─ api.js                 # stubbed API hooks to Python logic/mock
+│  │  ├─ i18n.js                # EN/BM/中文 translations
+│  │  ├─ App.jsx / main.jsx
+│  │  └─ styles.css
+│  └─ vite.config.js
+│
+├─ customer_tool/               # Python validation engine
+│  └─ src/ (core, utils, processing, workflows, tests)
+│
+└─ employee_tool/               # Python CLI for ops
+   └─ src/ (core, utils, cli, config, tests)
+```
 
-2. Brand and Model Validation:
-- Uses a custom implementation of the Levenshtein distance (edit distance) for fuzzy matching
-- Compares the input brand and model against the canonical dataset
-- Also handles reversed strings (e.g., "notorP" matches "Proton")
+---
 
-3. Year Validation:
-- Checks if the input year is within the valid range for the specific vehicle model (from year_start to year_end)
+## Frontend: Smart Onboarding
 
-4. Error Detection:
-- Categorizes errors into: typo_brand, typo_model, invalid_year, plate_format_error, invalid_brand, invalid_model
-- Returns a list of errors found and suggestions for correction
+### Features
 
-# Tool-Specific Implementation
-- Customer-Facing Tool: Focuses on batch processing and automated corrections
-- Employee-Facing Tool: Provides interactive validation with immediate feedback and manual override capabilities
+* **Single‑page flow** with expandable sections and a **top progress stepper**
+* **Realtime plate check** → if matched, prompts for **last 4 NRIC** in a modal and **prefills personal info**
+* **Context chips** under the plate field:
 
-### Error Types
+  * *No plate yet? Register new car*
+  * *Use Passport instead of NRIC*
+  * *Company car (SSM/BRN)*
+* **Personal Info** supports **ID type** switch (NRIC / Passport / Business Reg No.)
+* **Car Info** with brand/model/year validation hooks and auto‑correction suggestions (via engine)
+* **Funding/Confirmation** with final summary
+* **Benefits (6 cards)** and **full‑width footer** styled to match the brand
+* **Language toggle** (EN/BM/中文) across the header and UI labels
 
-The system can detect and classify the following types of errors:
+### How the plate check works
 
-- typo_brand: Typo in the brand name (e.g., "Toyot" → "Toyota")
-- typo_model: Typo in the model name (e.g., "Civicy" → "Civic")
-- invalid_year: Year outside the valid range for the model
-- plate_format_error: Invalid plate number format
-- invalid_brand: Brand not found in the database
-- invalid_model: Model not found for the specified brand
+1. User enters a plate → click **Verify**.
+2. Frontend calls a local stub (`api.verifyPlate`) which consults sample data (or your API).
+3. If found, show modal **“We found this vehicle”** → ask for **last 4 NRIC** → on success, prefill *Personal Info*.
+4. If not found, continue as **new registration**.
 
-### Performance Features
-- Optimized Fuzzy Matching: Uses early termination in the Levenshtein distance calculation for better performance
-- Efficient Data Structures: Uses sets for brand and model lookups for O(1) complexity
-- Reversed String Handling: Special handling for reversed brand names (e.g., "notorP" → "Proton")
-- No External Dependencies: Uses only Python's standard library for easy deployment
-- Caching: Implements LRU caching for fuzzy matching to improve performance
+### Local configuration
 
-### Configuration
-# Customer-Facing Tool
-- src/config/settings.py: Contains data file paths, fuzzy matching thresholds, and logging settings
+`smart-onboarding/src/api.js` contains stubbed functions. Replace with real endpoints when your backend is ready.
 
-# Employee-Facing Tool
-- src/config/settings.py: Contains data file paths, validation thresholds, and logging settings
+### i18n (EN/BM/中文)
 
-### Logging
-# Customer-Facing Tool
-- Logs to validation.log
-- Records data loading operations, validation requests, errors, warnings, and performance metrics
+* Language toggle component updates `lang` context.
+* Labels are mapped via `i18n.js`. To add/rename keys, edit the dictionary once and use `t('key')` in components.
 
-# Employee-Facing Tool
-- Logs to employee_tool.log
-- Records authentication attempts, validation operations, data modifications, and system events
+---
 
-### Testing
-# Customer-Facing Tool
-- Unit tests for all validation functions in src/tests/test_validator.py
-- Test cases covering all error types
-- Automated test execution with python main.py --mode test
+## Python Validation Engine
 
-# Employee-Facing Tool
-- Unit tests for employee tool functionality in tests/test_employee_tool.py
-- Tests for authentication, validation, and data management
-- Run tests with python -m unittest tests.test_employee_tool
+### Capabilities
+
+* Plate regex validation (MY formats)
+* Fuzzy matching for **brand** and **model** (custom Levenshtein + early exit)
+* Year window checks (per model: `year_start`–`year_end`)
+* Error typing: `typo_brand`, `typo_model`, `invalid_year`, `plate_format_error`, `invalid_brand`, `invalid_model`
+* Auto‑suggest & auto‑correct modes
+
+### Run modes
+
+```bash
+# From customer_tool/src
+python main.py --mode validate    # run validator on sample dataset
+python main.py --mode batch       # batch → JSON
+python main.py --mode correct     # apply corrections
+python main.py --mode workflow    # validate → correct → revalidate → compare
+python main.py --mode test        # unit tests
+```
+
+---
+
+## Employee CLI
+
+**Menu:** View Car Models • Validate Vehicle Grant • Search Grants • Generate Report • Exit
+
+```bash
+# From employee_tool
+python main.py --mode init   # seeds CSVs
+python main.py --mode cli    # start TUI/CLI
+```
+
+---
+
+## Data Files
+
+* `car_dataset.csv` — canonical brand/model/year ranges
+* `validation_dataset.csv` — noisy input samples for testing
+* `car_models_list.csv` — (CLI) reference list
+* `employee_credentials.csv`, `customer_data.csv`, `vehicle_grants.csv` — (CLI) operational data
+
+> All CSVs are human‑readable; adjust or extend as needed for your demos.
+
+---
+
+## Testing
+
+* **Frontend:** add React tests with Vitest/Jest as needed
+* **Engine:** `python src/main.py --mode test`
+* **CLI:** `python -m unittest tests.test_employee_tool`
+
+---
+
+## Troubleshooting
+
+* **Vite shows a blank page**
+
+  * Check the console for import errors
+  * Ensure Node ≥ 18: `node -v`
+* **Modal not closing / keyboard focus issues**
+
+  * Verify component state and that only one modal is mounted
+* **Python cannot import modules**
+
+  * Activate venv and run from the correct folder (`customer_tool/src` or `employee_tool`)
+* **Unicode paths on Windows**
+
+  * Use absolute paths or run PowerShell as Admin
+
+---
+
+## FAQ
+
+**Can I plug a real API instead of stubs?**
+Yes. Replace `api.js` calls with your endpoints; keep the response shape.
+
+**Do I need external ML/AI?**
+No. The engine uses custom fuzzy matching and standard Python.
+
+**How do I add another language?**
+Add a new key (e.g., `id`) in `i18n.js`, translate the labels, and expose a toggle chip.
+
+---
+
+## License
+
+MIT for hackathon/demo purposes unless superseded by sponsor requirements.

@@ -199,15 +199,39 @@ input:focus, select:focus{ outline:none; border-color:#b9c8ff; box-shadow:0 0 0 
   display:flex; align-items:center; justify-content:center; z-index:60;
 }
 .modal{
-  width: min(560px, 92vw);
-  background:#fff; border:1px solid var(--border); border-radius:16px; box-shadow:var(--shadow);
+  width: min(720px, 92vw);
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:18px;
+  box-shadow: 0 20px 50px rgba(2,6,23,.18);
+  overflow:hidden;
 }
-.modal-head{ display:flex; justify-content:space-between; align-items:center; padding:14px 16px; border-bottom:1px solid var(--border); }
-.modal-title{ font-weight:800; }
+.modal-head{
+  display:flex; justify-content:space-between; align-items:center;
+  padding:16px 18px; border-bottom:1px solid var(--border);
+  background: linear-gradient(180deg,#f8fafc,#f3f6fb);
+}
+.modal-title{ font-weight:900; font-size:16px; letter-spacing:.2px; }
 .modal-x{ background:transparent; border:none; font-size:22px; line-height:1; cursor:pointer; opacity:.8 }
-.modal-body{ padding: 14px 16px; }
+.modal-body{ padding: 18px; }
 .modal-text{ color:#475569; margin: 0; }
-.modal-foot{ padding: 12px 16px 16px; display:flex; gap:10px; justify-content:flex-end; }
+.modal-foot{ padding: 12px 18px 18px; display:flex; gap:10px; justify-content:flex-end; }
+
+/* Confirmation layout */
+.confirm-grid{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:12px;
+}
+.confirm-grid .kv{
+  display:flex; flex-direction:column; gap:6px;
+  border:1px solid var(--border);
+  border-radius:12px; padding:12px;
+  background:#f8fafc;
+}
+.confirm-grid .kv label{ font-size:12px; color:#64748b; font-weight:700; }
+.confirm-grid .kv span{ font-size:14px; color:#0f172a; font-weight:700; }
+.confirm-grid .kv.col-2{ grid-column:span 2; }
 
 /* subtle tip under helper pills */
 .hint{
@@ -396,7 +420,7 @@ input.error {
 
 /* Brand */
 .brand{ display:flex; align-items:center; gap:10px; text-decoration:none; color:inherit; }
-.brand img{ width:36px; height:36px; border-radius:10px; }
+.brand img{ width:80px; height:40px; border-radius:15px; }
 .brand-text strong{ font-size:18px; letter-spacing:.2px; }
 .tagline{ display:block; font-size:12px; color:#64748b; }
 

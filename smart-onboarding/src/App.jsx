@@ -7,6 +7,7 @@ import PersonalSection from './components/PersonalSection';
 import CarSection from './components/CarSection';
 import FundingSection from './components/FundingSection';
 import Benefits from './components/Benefits';
+import Modal from './components/Modal';
 import Footer from './components/Footer';
 import Header from './components/Header';
 import ChatbotWidget from './components/ChatbotWidget';
@@ -40,6 +41,10 @@ export default function App(){
   const [car, setCar] = useState({ brand: '', model: '', year: '' });
   const [submitting, setSubmitting] = useState(false);
   const [submitRes, setSubmitRes] = useState(null);
+  const [submittedPersonal, setSubmittedPersonal] = useState(false);
+  const [submittedCar, setSubmittedCar] = useState(false);
+  const [confirmPersonal, setConfirmPersonal] = useState(false);
+  const [confirmCar, setConfirmCar] = useState(false);
 
   const derived = useMemo(()=>derive(personal.nric), [personal.nric]);
   const stepsOrder = ['plate','personal','car','funding'];
@@ -63,6 +68,50 @@ export default function App(){
   function handlePlateVerified(){ setOpenId('personal'); }
   function setPrefill(profile){ setPersonal(p=>({ ...p, ...profile })); setCar(c=>({ ...c, ...profile })); }
   function onCarValid(){ setOpenId('funding'); }
+
+  // ---- validators used for confirmation gating ----
+  function isValidEmail(v){ return /.+@.+\..+/.test(String(v||'')); }
+  function isValidPostcode(v){ return /^\d{5}$/.test(String(v||'')); }
+  function isValidMobile(v){ return /^\d{9,12}$/.test(String(v||'').replace(/\D/g, '')); }
+  function isValidNRIC(v){
+    const d = String(v||'').replace(/\D/g, '');
+    if (d.length !== 12) return false;
+    const yy = d.slice(0,2), mm = d.slice(2,4), dd = d.slice(4,6);
+    const m = Number(mm), day = Number(dd);
+    if (m < 1 || m > 12) return false;
+    const maxDay = new Date(Number(`20${yy}`), m, 0).getDate();
+    return day >= 1 && day <= maxDay;
+  }
+  function validPersonal(){
+    const idOk = personal.idType === 'NRIC' ? isValidNRIC(personal.idValue) : (personal.idValue||'').length>2;
+    return (
+      (personal.fullName||'').trim().length>1 &&
+      idOk && isValidEmail(personal.email) && isValidMobile(personal.phone) &&
+      (personal.addressLine1||'').trim().length>3 && isValidPostcode(personal.postcode) &&
+      (personal.city||'').trim().length>1 && (personal.state||'').trim().length>1
+    );
+  }
+  function validCar(){
+    const y = Number(car.year);
+    const okYear = /^\d{4}$/.test(String(car.year||'')) && y>=1990 && y<= new Date().getFullYear()+1;
+    return ( (car.brand||'').trim().length>1 && (car.model||'').trim().length>1 && okYear );
+  }
+  function handlePersonalSave(){
+    setSubmittedPersonal(true);
+    if (validPersonal()) setConfirmPersonal(true);
+    else requestAnimationFrame(()=>{
+      const el = document.querySelector('.personal input.error');
+      if (el) el.scrollIntoView({behavior:'smooth', block:'center'});
+    });
+  }
+  function handleCarSave(){
+    setSubmittedCar(true);
+    if (validCar()) setConfirmCar(true);
+    else requestAnimationFrame(()=>{
+      const el = document.querySelector('.car input.error');
+      if (el) el.scrollIntoView({behavior:'smooth', block:'center'});
+    });
+  }
 
   async function onSubmit(){
     setSubmitting(true); setSubmitRes(null);
@@ -105,10 +154,11 @@ export default function App(){
                 t={t}
                 personal={personal}
                 setPersonal={setPersonal}
+                submitted={submittedPersonal}
               />
               <div className="actions">
                 <button className="btn ghost" onClick={() => setOpenId('plate')}>{t("back")}</button>
-                <button className="btn primary" onClick={() => setOpenId('car')}>{t("save_continue")}</button>
+                <button className="btn primary" onClick={handlePersonalSave}>{t("save_continue")}</button>
               </div>
             </AccordionItem>
 
@@ -117,7 +167,7 @@ export default function App(){
               t={t}
               car={car}
               setCar={setCar}
-              onValid={onCarValid}
+              onValid={handleCarSave}
             />
             <div className="actions">
               <button className="btn ghost" onClick={() => setOpenId('personal')}>{t("back")}</button>
@@ -136,6 +186,38 @@ export default function App(){
       </main>
 
       <ChatbotWidget />
+
+      {/* confirmation modals */}
+      <Modal
+        open={confirmPersonal}
+        title="Confirm Personal Information"
+        onClose={()=>setConfirmPersonal(false)}
+        secondary={<button className="btn ghost" onClick={()=>setConfirmPersonal(false)}>Edit</button>}
+        primary={<button className="btn primary" onClick={()=>{setConfirmPersonal(false); setOpenId('car');}}>Confirm & Continue</button>}
+      >
+        <div className="confirm-grid">
+          <div className="kv"><label>Name</label><span>{personal.fullName}</span></div>
+          <div className="kv"><label>NRIC/ID</label><span>{personal.idValue || personal.nric}</span></div>
+          <div className="kv"><label>Email</label><span>{personal.email}</span></div>
+          <div className="kv"><label>Mobile</label><span>{personal.phone}</span></div>
+          <div className="kv col-2"><label>Address</label><span>{personal.addressLine1}, {personal.postcode} {personal.city}, {personal.state}</span></div>
+          <div className="kv"><label>E‑Hailing</label><span>{personal.eHailing? 'Yes':'No'}</span></div>
+        </div>
+      </Modal>
+
+      <Modal
+        open={confirmCar}
+        title="Confirm Car Information"
+        onClose={()=>setConfirmCar(false)}
+        secondary={<button className="btn ghost" onClick={()=>setConfirmCar(false)}>Edit</button>}
+        primary={<button className="btn primary" onClick={()=>{setConfirmCar(false); setOpenId('funding');}}>Confirm & Continue</button>}
+      >
+        <div className="confirm-grid">
+          <div className="kv"><label>Brand</label><span>{car.brand}</span></div>
+          <div className="kv"><label>Model</label><span>{car.model}</span></div>
+          <div className="kv"><label>Year</label><span>{car.year}</span></div>
+        </div>
+      </Modal>
     </div>
   );
 }

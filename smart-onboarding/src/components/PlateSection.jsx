@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { verifyPlate, confirmOwnership } from '../api';
+import { verifyPlate } from '../api';
 import Modal from './Modal';
 
 export default function PlateSection({ t, plate, setPlate, onVerified, setPrefill, onHelperSelectId }) {

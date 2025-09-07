@@ -101,21 +101,27 @@ export default function App(){
             </AccordionItem>
 
             <AccordionItem id="personal" openId={openId} setOpenId={setOpenId} title={t("personal_title")}>
-            <PersonalSection
-              t={t}
-              personal={personal}
-              setPersonal={setPersonal}
-              onSaved={() => setOpenId("car")}   // advance to Car section
-            />
-          </AccordionItem>
+              <PersonalSection
+                t={t}
+                personal={personal}
+                setPersonal={setPersonal}
+              />
+              <div className="actions">
+                <button className="btn ghost" onClick={() => setOpenId('plate')}>{t("back")}</button>
+                <button className="btn primary" onClick={() => setOpenId('car')}>{t("save_continue")}</button>
+              </div>
+            </AccordionItem>
 
           <AccordionItem id="car" openId={openId} setOpenId={setOpenId} title={t("car_title")}>
             <CarSection
               t={t}
               car={car}
               setCar={setCar}
-              onSaved={() => setOpenId("funding")}  // advance to Funding
+              onValid={onCarValid}
             />
+            <div className="actions">
+              <button className="btn ghost" onClick={() => setOpenId('personal')}>{t("back")}</button>
+            </div>
           </AccordionItem>
 
             <AccordionItem id="funding" openId={openId} setOpenId={setOpenId} title={t("funding_title")}>

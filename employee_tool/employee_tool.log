@@ -48,3 +48,23 @@
 2025-09-06 20:36:36,910 - __main__ - INFO - Starting employee tool...
 2025-09-06 20:41:39,403 - __main__ - INFO - Logging initialized
 2025-09-06 20:41:39,404 - __main__ - INFO - Starting employee tool...
+2025-09-07 21:48:08,671 - __main__ - INFO - Logging initialized
+2025-09-07 21:48:08,671 - __main__ - INFO - Starting employee tool...
+2025-09-07 21:58:54,688 - __main__ - INFO - Logging initialized
+2025-09-07 21:58:54,689 - __main__ - INFO - Starting employee tool...
+2025-09-07 21:59:17,690 - grant_validator - INFO - Loaded 8 car records
+2025-09-07 21:59:17,692 - grant_validator - INFO - Loaded 3 vehicle grant records
+2025-09-07 21:59:43,368 - utils.fuzzy_matcher - INFO - Loaded configuration from config.py
+2025-09-07 21:59:48,374 - grant_validator - INFO - Loaded 8 car records
+2025-09-07 21:59:48,376 - grant_validator - INFO - Loaded 3 vehicle grant records
+2025-09-07 22:01:19,434 - grant_validator - INFO - Loaded 4 vehicle grant records
+2025-09-07 22:01:19,435 - grant_validator - INFO - Added new vehicle grant GRANT20250907220048 by employee 123
+2025-09-07 22:03:44,261 - grant_validator - INFO - Loaded 8 car records
+2025-09-07 22:03:44,263 - grant_validator - INFO - Loaded 4 vehicle grant records
+2025-09-07 22:03:57,426 - grant_validator - INFO - Found 2 grants matching 'abc 1234' in plate_number
+2025-09-07 22:04:56,831 - grant_validator - INFO - Loaded 8 car records
+2025-09-07 22:04:56,833 - grant_validator - INFO - Loaded 4 vehicle grant records
+2025-09-07 22:04:56,834 - customer_manager - INFO - Loaded 3 customer records
+2025-09-07 22:05:47,646 - grant_validator - INFO - Loaded 8 car records
+2025-09-07 22:05:47,647 - grant_validator - INFO - Loaded 4 vehicle grant records
+2025-09-07 22:05:47,648 - customer_manager - INFO - Loaded 3 customer records

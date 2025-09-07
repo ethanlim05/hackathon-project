@@ -2,3 +2,4 @@ grant_id,plate_number,brand,model,year,owner_name,owner_id,grant_date,status,add
 GRANT001,ABC 1234,Toyota,Vios,2021,John Doe,CUST001,2021-05-15,active,admin,2025-09-06T19:16:36.341376,,
 GRANT002,XYZ 5678,Honda,Civic,2020,Jane Smith,CUST002,2020-08-20,active,admin,2025-09-06T19:16:36.341380,,
 GRANT003,DEF 9012,Proton,X70,2022,Robert Johnson,CUST003,2022-01-10,active,admin,2025-09-06T19:16:36.341383,,
+GRANT20250907220048,ABC 1234,Toyota,Vios,2021,John Doe,CUST001,2021-05-15,123,2025-09-07T22:01:19.430258,active

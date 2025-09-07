@@ -125,3 +125,28 @@
 2025-09-05 18:51:21,523 - core.validator - INFO - Validation result: No errors
 2025-09-05 18:51:21,523 - core.validator - INFO - Validating vehicle: plate=OLI 8161, brand=Honda, model=City, year=1970
 2025-09-05 18:51:21,523 - core.validator - INFO - Validation result: ['invalid_year']
+2025-09-07 22:06:31,553 - utils.data_loader - INFO - Loading data from: c:\Users\ethan\OneDrive\Desktop\Hackathon\hackathon-project\data\car_dataset.csv
+2025-09-07 22:06:31,555 - utils.data_loader - INFO - Successfully loaded 8 rows from c:\Users\ethan\OneDrive\Desktop\Hackathon\hackathon-project\data\car_dataset.csv
+2025-09-07 22:06:31,556 - core.validator - INFO - Car data loaded successfully: 8 records
+2025-09-07 22:06:31,557 - utils.data_loader - INFO - Loading data from: c:\Users\ethan\OneDrive\Desktop\Hackathon\hackathon-project\customer_tool\core\..\..\data\validation_dataset.csv
+2025-09-07 22:06:31,558 - utils.data_loader - INFO - Successfully loaded 10 rows from c:\Users\ethan\OneDrive\Desktop\Hackathon\hackathon-project\customer_tool\core\..\..\data\validation_dataset.csv
+2025-09-07 22:06:31,559 - core.validator - INFO - Validating vehicle: plate=BMR 3420, brand=Toyot, model=Vios, year=2021
+2025-09-07 22:06:31,563 - core.validator - INFO - Validation result: ['typo_brand']
+2025-09-07 22:06:31,566 - core.validator - INFO - Validating vehicle: plate=LQJ 4070, brand=Toyota, model=Camry, year=2015
+2025-09-07 22:06:31,567 - core.validator - INFO - Validation result: No errors
+2025-09-07 22:06:31,569 - core.validator - INFO - Validating vehicle: plate=SHX 7481, brand=Honda, model=Civicy, year=2001
+2025-09-07 22:06:31,570 - core.validator - INFO - Validation result: ['typo_model']
+2025-09-07 22:06:31,575 - core.validator - INFO - Validating vehicle: plate=KJB 4513, brand=Toyot, model=Camr, year=2025
+2025-09-07 22:06:31,577 - core.validator - INFO - Validation result: ['typo_brand', 'typo_model']
+2025-09-07 22:06:31,578 - core.validator - INFO - Validating vehicle: plate=XUP 4254, brand=notorP, model=X70, year=2099
+2025-09-07 22:06:31,579 - core.validator - INFO - Validation result: ['typo_brand', 'invalid_year']
+2025-09-07 22:06:31,580 - core.validator - INFO - Validating vehicle: plate=RYL 5036, brand=Honda, model=City, year=2016
+2025-09-07 22:06:31,584 - core.validator - INFO - Validation result: No errors
+2025-09-07 22:06:31,585 - core.validator - INFO - Validating vehicle: plate=EYU 1252, brand=Toyot, model=Vios, year=2011
+2025-09-07 22:06:31,586 - core.validator - INFO - Validation result: ['typo_brand']
+2025-09-07 22:06:31,586 - core.validator - INFO - Validating vehicle: plate=OUG9690, brand=Perodua, model=Axia, year=1800
+2025-09-07 22:06:31,587 - core.validator - INFO - Validation result: ['invalid_year']
+2025-09-07 22:06:31,596 - core.validator - INFO - Validating vehicle: plate=BCN 8003, brand=Honda, model=Civic, year=2022
+2025-09-07 22:06:31,596 - core.validator - INFO - Validation result: No errors
+2025-09-07 22:06:31,601 - core.validator - INFO - Validating vehicle: plate=OLI 8161, brand=Honda, model=City, year=1970
+2025-09-07 22:06:31,604 - core.validator - INFO - Validation result: ['invalid_year']
